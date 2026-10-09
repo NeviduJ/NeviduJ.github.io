@@ -1,53 +1,109 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Github, Linkedin, Mail, BookOpen, Star, GitFork, ExternalLink } from "lucide-react";
+import { ArrowUpRight, ArrowDown, Star, GitFork } from "lucide-react";
 import publications from "../../data/publications.json";
 import { getTopRepos } from "@/lib/github";
+import { cvPdfHref, profile } from "@/data/resume";
 import Publications from "@/components/Publications";
+import ScriptMorph from "@/components/ScriptMorph";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import SectionHeading from "@/components/SectionHeading";
+import Tokenized from "@/components/Tokenized";
+import Spotlight from "@/components/Spotlight";
+import CoauthorNetwork from "@/components/CoauthorNetwork";
+import { buildCoauthorNetwork } from "@/lib/coauthors";
 import * as motion from "framer-motion/client";
 import { Suspense } from "react";
+
+const SOCIALS = [
+  { label: "GitHub", href: "https://github.com/NeviduJ" },
+  { label: "Google Scholar", href: "https://scholar.google.com/citations?user=2pDm_0UAAAAJ&hl=en&oi=ao" },
+  { label: "HuggingFace", href: "https://huggingface.co/Nevidu" },
+  { label: "ResearchGate", href: "https://www.researchgate.net/profile/Nevidu-Jayatilleke" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/nevidu-jayatilleke" },
+  { label: "CV (PDF)", href: cvPdfHref },
+];
+
+// The name in Sinhala and Tamil, shown before it settles into English
+const FIRST_NAME = [
+  { text: "නෙවිදු", font: "font-sinhala" as const },
+  { text: "நெவிது", font: "font-tamil" as const },
+];
+const LAST_NAME = [
+  { text: "ජයතිලක", font: "font-sinhala" as const },
+  { text: "ஜயதிலக", font: "font-tamil" as const },
+];
+
+// Research interests from the CV
+const TOPICS = [
+  "Computational Semantics",
+  "Diachronic Linguistics",
+  "Semantic Change",
+  "Diachronic Corpora",
+  "Machine Translation",
+  "Optical Character Recognition",
+  "Text Summarisation",
+  "Information Extraction",
+  "Speech Recognition",
+  "LLM Value Alignment",
+];
+
+const LANGUAGE_COLORS: Record<string, string> = {
+  Python: "#3572A5",
+  "Jupyter Notebook": "#DA5B0B",
+  TypeScript: "#3178C6",
+  JavaScript: "#F1E05A",
+  HTML: "#E34C26",
+};
+
+const NETWORK_WIDTH = 1100;
+const NETWORK_HEIGHT = 620;
 
 async function ProjectsSection() {
   const repos = await getTopRepos("NeviduJ");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {repos.map((repo: any) => (
+    <div className="grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+      {repos.map((repo: any, index: number) => (
         <motion.a
           key={repo.id}
           href={repo.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          whileHover={{ scale: 1.02 }}
-          className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-all group"
+          transition={{ delay: index * 0.06 }}
+          className="group flex min-h-56 flex-col bg-paper p-6 transition-colors duration-300 hover:bg-accent hover:text-accent-ink"
         >
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              {repo.name}
-            </h3>
-            <ExternalLink className="w-4 h-4 text-neutral-400" />
+          <div className="mb-6 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.15em] text-muted group-hover:text-accent-ink/70">
+            <span>R/{String(index + 1).padStart(2, "0")}</span>
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </div>
+          <h3 className="tok-group mb-3 break-words text-lg font-semibold tracking-tight">
+            <Tokenized text={repo.name} />
+          </h3>
           {repo.description && (
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2 mb-4">
-              {repo.description}
+            <p className="tok-group mb-6 line-clamp-3 text-sm text-muted group-hover:text-accent-ink/80">
+              <Tokenized text={repo.description} />
             </p>
           )}
-          <div className="flex gap-4 text-xs text-neutral-500">
-            <span className="flex items-center gap-1">
-              <Star className="w-3 h-3" /> {repo.stargazers_count}
-            </span>
-            <span className="flex items-center gap-1">
-              <GitFork className="w-3 h-3" /> {repo.forks_count}
-            </span>
+          <div className="mt-auto flex gap-4 font-mono text-[11px] text-muted group-hover:text-accent-ink/80">
             {repo.language && (
-              <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-blue-500" />
+              <span className="flex items-center gap-1.5">
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: LANGUAGE_COLORS[repo.language] ?? "currentColor" }}
+                />
                 {repo.language}
               </span>
             )}
+            <span className="flex items-center gap-1">
+              <Star className="h-3 w-3" /> {repo.stargazers_count}
+            </span>
+            <span className="flex items-center gap-1">
+              <GitFork className="h-3 w-3" /> {repo.forks_count}
+            </span>
           </div>
         </motion.a>
       ))}
@@ -61,156 +117,228 @@ export default async function Home() {
     ? '/Nevidu-Jayatilleke'
     : '';
   const profileImageSrc = `${basePath}/profile.jpg?v=3`;
+  const network = buildCoauthorNetwork(publications, NETWORK_WIDTH, NETWORK_HEIGHT);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 selection:bg-neutral-200 dark:selection:bg-neutral-800">
-      {/* Hero Section */}
-      <section className="max-w-3xl mx-auto px-6 py-24 md:py-32">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row gap-8 items-start md:items-center"
-        >
-          <div className="relative w-32 h-32 md:w-40 md:h-40 shrink-0 overflow-hidden rounded-full border-2 border-neutral-100 dark:border-neutral-800">
-            <img
-              src={profileImageSrc}
-              alt="Nevidu Jayatilleke"
-              className="object-cover w-full h-full"
-            />
+    <>
+      <Nav />
+      <main className="overflow-x-clip">
+        {/* Hero */}
+        <section className="relative">
+          <Spotlight />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-[2vw] right-[-14vw] select-none font-sinhala text-[70vw] leading-none text-transparent [-webkit-text-stroke:1px_var(--line)] md:right-[-4vw] md:text-[38vw]"
+          >
+            අ
           </div>
-          <div className="flex-1 space-y-4">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-              Nevidu Jayatilleke
-            </h1>
-            <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Researcher specialising in Natural Language Processing
-            </p>
-            <div className="flex gap-3 pt-2 flex-wrap items-center">
-              <SocialLink href="https://github.com/NeviduJ" icon={<Github className="w-4 h-4" />} label="GitHub" showLabel={true} />
-              <SocialLink href="https://scholar.google.com/citations?user=2pDm_0UAAAAJ&hl=en&oi=ao" icon={<svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24C5.4 24 0 18.6 0 12S5.4 0 12 0s12 5.4 12 12-5.4 12-12 12zm0-22C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1 16.5V17c-2.8-.7-4.5-2.6-4.5-5.5 0-3.1 2.1-5 5.5-5s5.5 1.9 5.5 5c0 2.4-1.1 4.1-3 4.8v1.7c2.3-.6 4-2.6 4-5.5 0-3.9-2.9-6.5-6.5-6.5S5.5 8.6 5.5 12c0 3.3 2 5.4 5.5 6.5z" /></svg>} label="Google Scholar" showLabel={true} />
-              <SocialLink href="https://huggingface.co/Nevidu" icon={<span className="text-sm font-semibold">🤗</span>} label="HuggingFace" showLabel={true} />
-              <SocialLink href="https://www.researchgate.net/profile/Nevidu-Jayatilleke" icon={<span className="text-sm font-semibold">RG</span>} label="ResearchGate" showLabel={true} />
+          {/* The same glyph in vermilion, revealed only around the cursor. The mask sits on a
+              full-size wrapper so its coordinates match the spotlight's */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 overflow-hidden transition-opacity duration-500"
+            style={{
+              opacity: "var(--spot, 0)",
+              maskImage: "radial-gradient(300px circle at var(--spot-x) var(--spot-y), #000, transparent 75%)",
+              WebkitMaskImage: "radial-gradient(300px circle at var(--spot-x) var(--spot-y), #000, transparent 75%)",
+            }}
+          >
+            <div className="absolute -top-[2vw] right-[-14vw] select-none font-sinhala text-[70vw] leading-none text-transparent [-webkit-text-stroke:1.5px_var(--accent)] md:right-[-4vw] md:text-[38vw]">
+              අ
             </div>
           </div>
-        </motion.div>
-      </section>
 
-      {/* About Section */}
-      <section className="max-w-3xl mx-auto px-6 py-12 border-t border-neutral-100 dark:border-neutral-900">
-        <h2 className="text-2xl font-semibold mb-6">About</h2>
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="prose dark:prose-invert text-neutral-600 dark:text-neutral-400 leading-relaxed space-y-4"
-        >
-          <p className="md:text-justify">
-            I am a Postgraduate Researcher from the University of Moratuwa, Sri Lanka, specialising primarily in the field of Natural Language Processing (NLP). My work is dedicated to developing technological solutions for challenging linguistic tasks, particularly focusing on advancing the capabilities of AI for low-resource languages such as Sinhala and Tamil.
-          </p>
-          <p className="md:text-justify">
-            I am deeply committed to research that bridges the digital language divide, ensuring that AI technologies are universally accessible and effective across diverse linguistic backgrounds. Through my academic pursuits and research contributions, I strive to make significant advancements in the broader fields of artificial intelligence and computational linguistics.
-          </p>
-          <div className="pt-2">
+          <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-14 md:pb-24 md:pt-24">
+            <h1 className="font-serif text-[clamp(4.25rem,15vw,12.5rem)] leading-[0.82] tracking-[-0.03em]">
+              <span className="block">
+                <ScriptMorph text="Nevidu" variants={FIRST_NAME} />
+              </span>
+              <span className="block pl-[6vw] italic">
+                <ScriptMorph text="Jayatilleke" variants={LAST_NAME} delay={150} />
+                <span className="not-italic text-accent">.</span>
+              </span>
+            </h1>
+
+            <div className="mt-14 grid items-end gap-12 md:mt-20 md:grid-cols-12">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+                className="space-y-8 md:col-span-8"
+              >
+                <p className="tok-group max-w-xl text-xl leading-snug md:text-2xl">
+                  <Tokenized text="A Sri Lankan NLP researcher with a special focus on " />
+                  <em className="font-serif text-[1.2em] text-accent">
+                    <Tokenized text="multilingual AI" />
+                  </em>
+                  .
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {SOCIALS.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-1.5 border border-line px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] transition-colors hover:border-ink hover:bg-ink hover:text-paper"
+                    >
+                      {social.label}
+                      <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </a>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.figure
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.1 }}
+                className="md:col-span-4 md:col-start-9 md:justify-self-end"
+              >
+                <div className="group relative w-44 md:w-56">
+                  <span className="absolute -left-2 -top-2 h-4 w-4 border-l-2 border-t-2 border-accent" />
+                  <span className="absolute -bottom-2 -right-2 h-4 w-4 border-b-2 border-r-2 border-accent" />
+                  <img
+                    src={profileImageSrc}
+                    alt="Nevidu Jayatilleke"
+                    className="aspect-[4/5] w-full object-cover grayscale contrast-110 transition duration-500 group-hover:grayscale-0"
+                  />
+                </div>
+              </motion.figure>
+            </div>
+          </div>
+
+          <div className="overflow-hidden bg-accent py-4 text-accent-ink" aria-hidden="true">
+            <div className="marquee flex w-max whitespace-nowrap font-serif text-2xl italic md:text-3xl">
+              {[...TOPICS, ...TOPICS].map((topic, i) => (
+                <span key={i} className="flex items-center">
+                  {topic}
+                  <span className="mx-8 font-sans text-base not-italic">✳</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* About */}
+        <section id="about" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24 md:py-32">
+          <SectionHeading index="01" title="About">
             <Link
               href="/resume"
-              className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-accent"
             >
-              More Info →
+              <span className="link-draw">Full CV</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Publications Section - Now Prominent */}
-      <section className="max-w-3xl mx-auto px-6 py-12 border-t border-neutral-100 dark:border-neutral-900">
-        <Publications publications={publications} />
-      </section>
-
-      {/* Projects Section */}
-      <section className="max-w-3xl mx-auto px-6 py-12 border-t border-neutral-100 dark:border-neutral-900">
-        <h2 className="text-2xl font-semibold mb-8">Open Source Projects</h2>
-        <Suspense fallback={
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 animate-pulse">
-                <div className="h-5 bg-neutral-200 dark:bg-neutral-800 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-neutral-200 dark:bg-neutral-800 rounded w-full mb-1"></div>
-                <div className="h-4 bg-neutral-200 dark:bg-neutral-800 rounded w-5/6"></div>
-              </div>
-            ))}
-          </div>
-        }>
-          <ProjectsSection />
-        </Suspense>
-        <div className="mt-6 text-center">
-          <Link
-            href="https://github.com/NeviduJ?tab=repositories"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline font-medium"
+          </SectionHeading>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            View More on GitHub →
-          </Link>
-        </div>
-      </section>
-
-      {/* Contact Me Section */}
-      <section className="max-w-3xl mx-auto px-6 py-12 border-t border-neutral-100 dark:border-neutral-900">
-        <h2 className="text-2xl font-semibold mb-8">Contact Me</h2>
-        <div className="flex flex-col md:flex-row gap-8 md:gap-12">
-          <div className="flex items-start gap-4 flex-1">
-            <Mail className="w-5 h-5 text-neutral-500 mt-1" />
-            <div>
-              <h3 className="font-medium mb-1">Email</h3>
-              <a
-                href="mailto:nevidu.25@cse.mrt.ac.lk"
-                className="text-blue-600 dark:text-blue-400 hover:underline font-mono"
-              >
-                nevidu.25@cse.mrt.ac.lk
-              </a>
+            <p className="tok-group max-w-5xl font-serif text-3xl leading-[1.15] hyphens-auto md:text-justify md:text-[2.75rem]">
+              <Tokenized text={profile[0]} />
+            </p>
+            <div className="mt-12 grid gap-8 md:mt-16 md:grid-cols-2 md:gap-12">
+              {profile.slice(1).map((paragraph, i) => (
+                <p key={i} className="tok-group text-justify leading-relaxed text-muted hyphens-auto md:text-lg">
+                  <Tokenized text={paragraph} />
+                </p>
+              ))}
             </div>
-          </div>
-          <div className="flex items-start gap-4 flex-1">
-            <Linkedin className="w-5 h-5 text-neutral-500 mt-1" />
-            <div>
-              <h3 className="font-medium mb-1">LinkedIn</h3>
-              <a
-                href="https://www.linkedin.com/in/nevidu-jayatilleke"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                linkedin.com/in/nevidu-jayatilleke
-              </a>
+            <div className="mt-12 grid gap-4 border-t border-line pt-8 md:mt-16 md:grid-cols-12 md:gap-8">
+              <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted md:col-span-3 md:pt-2">
+                Research interests
+              </p>
+              <div className="flex flex-wrap gap-2 md:col-span-9">
+                {TOPICS.map((topic) => (
+                  <span key={topic} className="border border-line px-3 py-1.5 text-sm">
+                    {topic}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </section>
 
-      {/* Footer */}
-      <footer className="max-w-3xl mx-auto px-6 py-12 border-t border-neutral-100 dark:border-neutral-900 text-center text-sm text-neutral-500">
-        <p>© {new Date().getFullYear()} Nevidu Jayatilleke. All rights reserved.</p>
-      </footer>
-    </main>
-  );
-}
+        {/* Publications */}
+        <section id="publications" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24 md:py-32">
+          <Publications publications={publications} />
+          <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
+            Synced daily from Google Scholar
+          </p>
+        </section>
 
-function SocialLink({ href, icon, label, showLabel }: { href: string; icon: React.ReactNode; label: string; showLabel?: boolean }) {
-  return (
-    <Link
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group relative inline-flex items-center justify-center p-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-50 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-md transition-colors border border-transparent hover:border-neutral-200 dark:hover:border-neutral-800"
-      aria-label={label}
-    >
-      {icon}
-      {showLabel && (
-        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-neutral-900 dark:bg-neutral-100 text-neutral-50 dark:text-neutral-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-          {label}
-        </span>
-      )}
-    </Link>
+        {/* Collaborators */}
+        <section id="collaborators" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24 md:py-32">
+          <SectionHeading index="03" title="Collaborators" count={network.nodes.length - 1} />
+          <CoauthorNetwork
+            nodes={network.nodes}
+            links={network.links}
+            width={NETWORK_WIDTH}
+            height={NETWORK_HEIGHT}
+          />
+        </section>
+
+        {/* Projects */}
+        <section id="projects" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24 md:py-32">
+          <SectionHeading index="04" title="Open Source">
+            <a
+              href="https://github.com/NeviduJ?tab=repositories"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-accent"
+            >
+              <span className="link-draw">All repositories</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+          </SectionHeading>
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="min-h-56 animate-pulse bg-paper p-6">
+                    <div className="mb-3 h-5 w-3/4 bg-surface" />
+                    <div className="mb-1 h-4 w-full bg-surface" />
+                    <div className="h-4 w-5/6 bg-surface" />
+                  </div>
+                ))}
+              </div>
+            }
+          >
+            <ProjectsSection />
+          </Suspense>
+        </section>
+
+        {/* Contact */}
+        <section id="contact" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24 md:py-32">
+          <SectionHeading index="05" title="Contact" />
+          <p className="mb-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+            <ArrowDown className="h-3 w-3 text-accent" /> Write to me
+          </p>
+          <a
+            href="mailto:nevidu.25@cse.mrt.ac.lk"
+            className="group inline-flex flex-wrap items-center gap-x-3 break-all font-serif text-[clamp(1.75rem,4vw,3rem)] italic leading-none transition-colors hover:text-accent"
+          >
+            nevidu.25@cse.mrt.ac.lk
+            <ArrowUpRight className="h-[0.6em] w-[0.6em] shrink-0 text-accent transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+          </a>
+          <p className="mt-10 text-muted">
+            Or find me on{" "}
+            <a
+              href="https://www.linkedin.com/in/nevidu-jayatilleke"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-draw text-ink"
+            >
+              LinkedIn
+            </a>
+            .
+          </p>
+        </section>
+      </main>
+
+      <Footer />
+    </>
   );
 }
