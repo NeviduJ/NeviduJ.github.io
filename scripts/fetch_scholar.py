@@ -4,6 +4,7 @@ import time
 import random
 import signal
 import arrow
+import requests
 from scholarly import scholarly, ProxyGenerator
 import scholarly.publication_parser as publication_parser
 
@@ -44,6 +45,67 @@ def normalize_pub_date(raw):
     except ValueError:
         return None
     return '-'.join([f"{parts[0]:04d}"] + [f"{p:02d}" for p in parts[1:3]])
+
+SERPAPI_URL = 'https://serpapi.com/search.json'
+
+def _serpapi_get(api_key, **params):
+    resp = requests.get(SERPAPI_URL, params={'engine': 'google_scholar_author', 'api_key': api_key, **params}, timeout=60)
+    data = resp.json()
+    if resp.status_code != 200 or 'error' in data:
+        raise RuntimeError(f"SerpApi error ({resp.status_code}): {data.get('error', resp.text[:200])}")
+    return data
+
+def fetch_publications_serpapi(author_id, api_key, existing_data):
+    """Fetch publications through SerpApi, which isn't blocked on CI runners.
+
+    The article list (titles, venues, citation counts) costs one request. Full
+    authors, publication date and link need one request per paper, so they are
+    reused from existing data and only fetched for papers not seen before.
+    """
+    cached_by_id = {p['scholar_id']: p for p in existing_data if p.get('scholar_id')}
+    cached_by_title = {p['title'].strip().lower(): p for p in existing_data}
+
+    articles = []
+    start = 0
+    while True:
+        data = _serpapi_get(api_key, author_id=author_id, num=100, start=start)
+        page = data.get('articles', [])
+        articles.extend(page)
+        if len(page) < 100:
+            break
+        start += 100
+    print(f"SerpApi returned {len(articles)} articles")
+
+    publications = []
+    for article in articles:
+        scholar_id = article.get('citation_id')
+        title = article.get('title', 'Untitled')
+        cached = cached_by_id.get(scholar_id) or cached_by_title.get(title.strip().lower())
+
+        if cached and cached.get('author') and cached.get('pub_date'):
+            author_str, pub_date, url = cached['author'], cached['pub_date'], cached.get('url')
+        else:
+            print(f"Fetching details for new publication: {title}")
+            citation = _serpapi_get(api_key, view_op='view_citation', citation_id=scholar_id).get('citation', {})
+            authors = [a.strip() for a in citation.get('authors', article.get('authors', '')).split(',') if a.strip()]
+            author_str = ' and '.join(authors) or 'Unknown Author'
+            pub_date = normalize_pub_date(citation.get('publication_date'))
+            url = citation.get('link') or article.get('link')
+
+        year = article.get('year')
+        publications.append({
+            'title': title,
+            'year': int(year) if str(year).isdigit() else (int(pub_date[:4]) if pub_date else 'N/A'),
+            'pub_date': pub_date,
+            'citation_count': (article.get('cited_by') or {}).get('value') or 0,
+            'venue': article.get('publication', ''),
+            'author': author_str,
+            'url': url,
+            'scholar_id': scholar_id,
+        })
+
+    publications.sort(key=lambda x: x.get('citation_count', 0), reverse=True)
+    return publications
 
 def setup_proxy():
     """Setup proxy for scholarly to avoid blocking"""
@@ -110,7 +172,8 @@ def fetch_publications_with_retry(author_id, max_retries=5):
                     'citation_count': pub.get('num_citations', 0),
                     'venue': pub['bib'].get('venue') or pub['bib'].get('journal') or pub['bib'].get('citation', ''),
                     'author': author_str,
-                    'url': pub.get('pub_url')
+                    'url': pub.get('pub_url'),
+                    'scholar_id': pub.get('author_pub_id'),
                 }
                 publications.append(pub_data)
             
@@ -148,7 +211,24 @@ def main():
         except Exception as e:
             print(f"Could not read existing data: {e}")
     
-    # Setup proxy
+    api_key = os.environ.get('SERPAPI_KEY')
+    if api_key:
+        print("Using SerpApi")
+        try:
+            pubs = fetch_publications_serpapi(AUTHOR_ID, api_key, existing_data or [])
+        except Exception as e:
+            # Fail loudly: this means a bad key, exhausted quota or an API change
+            print(f"✗ SerpApi fetch failed: {e}")
+            exit(1)
+        if not pubs:
+            print("✗ SerpApi returned no publications")
+            exit(1)
+        with open(output_file, 'w') as f:
+            json.dump(pubs, f, indent=2)
+        print(f"✓ Successfully saved {len(pubs)} publications to {output_file}")
+        return
+
+    print("SERPAPI_KEY not set, scraping Google Scholar directly")
     setup_proxy()
     
     signal.signal(signal.SIGALRM, _on_fetch_timeout)

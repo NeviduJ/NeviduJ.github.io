@@ -32,6 +32,8 @@ jobs:
 
       - name: Run scholar script
         timeout-minutes: 10  # Backstop; the script gives up after 5 minutes
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: |
           python -u scripts/fetch_scholar.py
 
