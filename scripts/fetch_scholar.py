@@ -2,7 +2,35 @@ import json
 import os
 import time
 import random
+import arrow
 from scholarly import scholarly, ProxyGenerator
+import scholarly.publication_parser as publication_parser
+
+# scholarly parses the full "Publication date" (e.g. 2026/3/15) but only keeps
+# the year. Record the raw value so publications can be ordered by month too.
+_last_pub_date = {}
+
+class _ArrowRecorder:
+    def __getattr__(self, name):
+        return getattr(arrow, name)
+
+    @staticmethod
+    def get(*args, **kwargs):
+        if args and isinstance(args[0], str):
+            _last_pub_date['value'] = args[0]
+        return arrow.get(*args, **kwargs)
+
+publication_parser.arrow = _ArrowRecorder()
+
+def normalize_pub_date(raw):
+    """Convert '2026/3/5' -> '2026-03-05', '2026/3' -> '2026-03', '2026' -> '2026'"""
+    if not raw:
+        return None
+    try:
+        parts = [int(p) for p in raw.strip().split('/')]
+    except ValueError:
+        return None
+    return '-'.join([f"{parts[0]:04d}"] + [f"{p:02d}" for p in parts[1:3]])
 
 def setup_proxy():
     """Setup proxy for scholarly to avoid blocking"""
@@ -48,6 +76,7 @@ def fetch_publications_with_retry(author_id, max_retries=5):
                     time.sleep(random.uniform(1, 2))
                 
                 # Fill publication details to get complete information including authors
+                _last_pub_date.clear()
                 try:
                     scholarly.fill(pub)
                 except Exception as e:
@@ -64,6 +93,7 @@ def fetch_publications_with_retry(author_id, max_retries=5):
                 pub_data = {
                     'title': pub['bib'].get('title', 'Untitled'),
                     'year': pub['bib'].get('pub_year', 'N/A'),
+                    'pub_date': normalize_pub_date(_last_pub_date.get('value')),
                     'citation_count': pub.get('num_citations', 0),
                     'venue': pub['bib'].get('venue') or pub['bib'].get('journal') or pub['bib'].get('citation', ''),
                     'author': author_str,

@@ -7,6 +7,7 @@ import { FileText } from "lucide-react";
 type Publication = {
   title: string;
   year: number | string;
+  pub_date?: string | null;
   citation_count: number;
   venue?: string;
   author?: string;
@@ -26,13 +27,16 @@ const isMe = (author: string) => author.includes("Jayatilleke") || author.includ
 const isFirstAuthor = (pub: Publication) =>
   typeof pub.author === "string" && isMe(pub.author.split(" and ")[0]);
 
-const yearOf = (pub: Publication) => Number(pub.year) || 0;
+// "YYYY-MM-DD", "YYYY-MM" or "YYYY"; ISO strings compare correctly as text
+const dateOf = (pub: Publication) => pub.pub_date || String(Number(pub.year) || 0);
+
+const byDate = (a: Publication, b: Publication) => dateOf(b).localeCompare(dateOf(a));
 
 const byYear = (a: Publication, b: Publication) =>
-  yearOf(b) - yearOf(a) || b.citation_count - a.citation_count;
+  byDate(a, b) || b.citation_count - a.citation_count;
 
 const byCitations = (a: Publication, b: Publication) =>
-  b.citation_count - a.citation_count || yearOf(b) - yearOf(a);
+  b.citation_count - a.citation_count || byDate(a, b);
 
 function sortPublications(pubs: Publication[], mode: SortMode) {
   if (mode === "year") return [...pubs].sort(byYear);
