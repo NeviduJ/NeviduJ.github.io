@@ -142,7 +142,8 @@ export default function CoauthorNetwork({
         </svg>
       </div>
 
-      <div className="pointer-events-none border-t border-line p-4 md:absolute md:bottom-4 md:left-4 md:max-w-sm md:border md:bg-paper/90 md:backdrop-blur">
+      {/* Details sit below the graph (fixed height, so nothing jumps) and never cover a node */}
+      <div className="min-h-[8.5rem] border-t border-line p-4 md:px-6">
         {active && !active.me ? (
           <>
             <p className="font-medium">{active.name}</p>
