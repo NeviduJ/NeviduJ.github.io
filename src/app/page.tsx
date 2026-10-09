@@ -112,11 +112,7 @@ async function ProjectsSection() {
 }
 
 export default async function Home() {
-  // Hardcoded basePath - works in both dev and production without env variables
-  const basePath = typeof window === 'undefined' && process.env.NODE_ENV === 'production'
-    ? '/Nevidu-Jayatilleke'
-    : '';
-  const profileImageSrc = `${basePath}/profile.jpg?v=3`;
+  const profileImageSrc = "/profile.jpg?v=3";
   const network = buildCoauthorNetwork(publications, NETWORK_WIDTH, NETWORK_HEIGHT);
 
   return (

@@ -23,7 +23,7 @@ export async function getTopRepos(username: string) {
             .filter((repo: any) =>
                 !repo.fork &&
                 !repo.private &&
-                repo.name !== 'Nevidu-Jayatilleke' // Exclude website repo
+                repo.name !== 'NeviduJ.github.io' // Exclude website repo
             )
             .map((repo: any) => {
                 const daysSinceUpdate = Math.floor(

@@ -2,7 +2,7 @@
 
 A modern, dynamic personal website for showcasing research publications, professional experience, and open-source projects. Built with Next.js and deployed on GitHub Pages.
 
-**Live Site:** [https://NeviduJ.github.io/Nevidu-Jayatilleke/](https://NeviduJ.github.io/Nevidu-Jayatilleke/)
+**Live Site:** [https://neviduj.github.io/](https://neviduj.github.io/)
 
 ## ✨ Features
 
@@ -44,8 +44,8 @@ A modern, dynamic personal website for showcasing research publications, profess
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/NeviduJ/Nevidu-Jayatilleke.git
-   cd Nevidu-Jayatilleke
+   git clone https://github.com/NeviduJ/NeviduJ.github.io.git
+   cd NeviduJ.github.io
    ```
 
 2. **Install dependencies**

@@ -1,5 +1,4 @@
-// The PDF lives in public/; plain links need the GitHub Pages base path added by hand
-export const cvPdfHref = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/Nevidu_Jayatilleke_CV.pdf`;
+export const cvPdfHref = "/Nevidu_Jayatilleke_CV.pdf";
 
 export const profile = [
     "I am currently a Postgraduate Researcher at the University of Moratuwa, Sri Lanka, specialising in multilingual Natural Language Processing (NLP) with a dedicated focus on advancing AI capabilities for low-resource environments.",

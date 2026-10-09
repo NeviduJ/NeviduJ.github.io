@@ -1,21 +1,10 @@
 import type { NextConfig } from "next";
 
-const repoBasePath = "/Nevidu-Jayatilleke";
-const isProd = process.env.NODE_ENV === "production";
-
+// Served from the root of https://neviduj.github.io/ (the NeviduJ.github.io repo), so no basePath
 const nextConfig: NextConfig = {
   output: "export",
-  ...(isProd
-    ? {
-        basePath: repoBasePath,
-        assetPrefix: repoBasePath,
-      }
-    : {}),
   images: {
     unoptimized: true,
-  },
-  env: {
-    NEXT_PUBLIC_BASE_PATH: isProd ? repoBasePath : "",
   },
 };
 
