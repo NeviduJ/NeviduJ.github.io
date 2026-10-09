@@ -2,15 +2,15 @@
   {
     "title": "Zero-shot OCR Accuracy of Low-Resourced Languages: A Comparative Analysis on Sinhala and Tamil",
     "year": 2025,
-    "citation_count": 9,
+    "citation_count": 12,
     "venue": "Proceedings of the 15th International Conference on Recent Advances in \u2026, 2025",
     "author": "Nevidu Jayatilleke and Nisansa De Silva",
     "url": "https://aclanthology.org/2025.ranlp-1.56/"
   },
   {
-    "title": "Sidiac: Sinhala diachronic corpus",
+    "title": "SiDiaC: Sinhala Diachronic Corpus",
     "year": 2025,
-    "citation_count": 6,
+    "citation_count": 9,
     "venue": "Proceedings of the 39th Pacific Asia Conference on Language, Information and \u2026, 2025",
     "author": "Nevidu Jayatilleke and Nisansa De Silva",
     "url": "https://aclanthology.org/2025.paclic-1.47.pdf"
@@ -18,7 +18,7 @@
   {
     "title": "Advancements in natural language processing for automatic text summarization",
     "year": 2024,
-    "citation_count": 5,
+    "citation_count": 6,
     "venue": "2024 4th International Conference on Computer Systems (ICCS), 74-84, 2024",
     "author": "Nevidu Jayatilleke and Ruvan Weerasinghe and Nipuna Senanayake",
     "url": "https://ieeexplore.ieee.org/abstract/document/10795848/"
@@ -26,7 +26,7 @@
   {
     "title": "A Hybrid Architecture with Efficient Fine Tuning for Abstractive Patent Document Summarization",
     "year": 2025,
-    "citation_count": 3,
+    "citation_count": 5,
     "venue": "2025 International Research Conference on Smart Computing and Systems \u2026, 2025",
     "author": "Nevidu Jayatilleke and Ruvan Weerasinghe",
     "url": "https://ieeexplore.ieee.org/abstract/document/11030964/"
@@ -40,11 +40,11 @@
     "url": "https://aclanthology.org/2026.chipsal-1.pdf#page=82"
   },
   {
-    "title": "SiDiaC-v. 2.0: Sinhala Diachronic Corpus Version 2.0",
+    "title": "SiDiaC-v.2.0: Sinhala Diachronic Corpus Version 2.0",
     "year": 2026,
     "citation_count": 1,
-    "venue": "arXiv preprint arXiv:2603.10861",
-    "author": "Nevidu Jayatilleke and Nisansa de Silva and Uthpala Nimanthi and Gagani Kulathilaka and Azra Safrullah and Johan Sofalas",
+    "venue": "Proceedings of the Fifteenth Language Resources and Evaluation Conference \u2026, 2026",
+    "author": "Nevidu Jayatilleke and Nisansa de Silva and Uthpala Nimanthi Sooriya-Arachchi and Gagani Kasundhi Kulathilaka and Azra Safrullah and Johan Nevin Sofalas",
     "url": "https://arxiv.org/abs/2603.10861"
   },
   {
@@ -54,6 +54,54 @@
     "venue": "Proceedings of the 22nd Workshop on Multiword Expressions (MWE 2026), 8-26, 2026",
     "author": "Johan Nevin Sofalas and Dilushri Pavithra and Nevidu Jayatilleke and Ruvan Weerasinghe",
     "url": "https://aclanthology.org/2026.mwe-1.2/"
+  },
+  {
+    "title": "SINHALEGAL: A Benchmark Corpus for Information Extraction and Analysis in Sinhala Legislative Texts",
+    "year": 2026,
+    "citation_count": 1,
+    "venue": "Proceedings of the Second Workshop on Language Models for Low-Resource \u2026, 2026",
+    "author": "Minduli Lasandi and Nevidu Jayatilleke",
+    "url": "https://aclanthology.org/2026.loreslm-1.11/"
+  },
+  {
+    "title": "SinBrief: A Hybrid Framework for Abstractive Text Summarisation of Sinhala Legal Documents",
+    "year": 2026,
+    "citation_count": 0,
+    "venue": "arXiv preprint arXiv:2609.32397",
+    "author": "Minduli Lasandi and Nevidu Jayatilleke",
+    "url": "https://arxiv.org/abs/2609.32397"
+  },
+  {
+    "title": "PlurVA-LLM-2026 Shared Task Track-1: Pluralistic Value Alignment in LLMs via Multilingual Fine-Tuning and Threshold Calibration",
+    "year": 2026,
+    "citation_count": 0,
+    "venue": "arXiv preprint arXiv:2609.32382",
+    "author": "Vihindi Kotalawala and Nevidu Jayatilleke",
+    "url": "https://arxiv.org/abs/2609.32382"
+  },
+  {
+    "title": "Dynamics of meaning: Towards the Evaluation of Diachronic Semantic Change in Sinhala",
+    "year": 2026,
+    "citation_count": 0,
+    "venue": "arXiv preprint arXiv:2609.08609",
+    "author": "Nevidu Jayatilleke and Nisansa de Silva",
+    "url": "https://arxiv.org/abs/2609.08609"
+  },
+  {
+    "title": "Impact of Cyclone Ditwah on the Colombo Stock Exchange: An Event Study on Market Reactions to Natural Disasters",
+    "year": 2026,
+    "citation_count": 0,
+    "venue": "2026 Moratuwa Engineering Research Conference (MERCon), 407-412, 2026",
+    "author": "Anupama Wickramaratne and Thevindu Fernando and Tharupahan Jayawardana and Dehan Wijesinghe and Senindu Dinapura and Madara Mendis and Nevidu Jayatilleke and Nisansa de Silva and Sandareka Wickramanayake",
+    "url": "https://ieeexplore.ieee.org/abstract/document/11691317/"
+  },
+  {
+    "title": "LMSpell: Spell Correction with Pre-Trained Language Models",
+    "year": 2026,
+    "citation_count": 0,
+    "venue": "2026 Moratuwa Engineering Research Conference (MERCon), 503-508, 2026",
+    "author": "Akesh Gunathilake and Nadil Karunarathna and Tharusha Bandaranayake and Surangika Ranathunga and Nisansa de Silva and Nevidu Jayatilleke",
+    "url": "https://ieeexplore.ieee.org/abstract/document/11691371/"
   },
   {
     "title": "From Sinhala to Dhivehi: Cross-Lingual Transfer Learning for Low-Resource Speech Recognition",
@@ -70,13 +118,5 @@
     "venue": "arXiv preprint arXiv:2606.29378",
     "author": "Avisha Dilhara and Nevidu Jayatilleke",
     "url": "https://arxiv.org/abs/2606.29378"
-  },
-  {
-    "title": "SINHALEGAL: A Benchmark Corpus for Information Extraction and Analysis in Sinhala Legislative Texts",
-    "year": 2026,
-    "citation_count": 0,
-    "venue": "Proceedings of the Second Workshop on Language Models for Low-Resource \u2026, 2026",
-    "author": "Minduli Lasandi and Nevidu Jayatilleke",
-    "url": "https://aclanthology.org/2026.loreslm-1.11/"
   }
 ]

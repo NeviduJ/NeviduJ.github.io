@@ -1,2 +1,3 @@
 scholarly
+bibtexparser<2
 requests
