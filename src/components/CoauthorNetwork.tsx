@@ -14,7 +14,11 @@ export default function CoauthorNetwork({
   nodes: NetworkNode[];
   links: NetworkLink[];
 }) {
-  const [activeId, setActiveId] = useState<string | null>(null);
+  // Hovering previews a collaborator; clicking pins them so their papers stay listed
+  const [hoverId, setHoverId] = useState<string | null>(null);
+  const [pinnedId, setPinnedId] = useState<string | null>(null);
+  const activeId = hoverId ?? pinnedId;
+  const togglePin = (id: string) => setPinnedId((current) => (current === id ? null : id));
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   // When the graph is wider than the screen, start scrolled to the middle (where "NJ" is)
@@ -51,7 +55,12 @@ export default function CoauthorNetwork({
   const sortedLinks = useMemo(() => [...links].sort((a, b) => a.weight - b.weight), [links]);
 
   return (
-    <div className="relative border border-line">
+    <div
+      className="relative border border-line"
+      onKeyDown={(e) => {
+        if (e.key === "Escape") setPinnedId(null);
+      }}
+    >
       {/* On narrow screens the graph keeps a readable size and scrolls sideways */}
       <div ref={scrollerRef} className="overflow-x-auto">
         <svg
@@ -59,7 +68,7 @@ export default function CoauthorNetwork({
           className="h-auto w-full min-w-[680px] touch-manipulation select-none"
           role="img"
           aria-label={`Co-author network: ${nodes.length - 1} collaborators`}
-          onClick={() => setActiveId(null)}
+          onClick={() => setPinnedId(null)}
         >
           {sortedLinks.map((link) => {
             const a = byId.get(link.source)!;
@@ -90,19 +99,31 @@ export default function CoauthorNetwork({
                 tabIndex={0}
                 role="button"
                 aria-label={`${node.name}, ${node.papers.length} ${node.papers.length === 1 ? "paper" : "papers"}`}
+                aria-pressed={node.id === pinnedId}
                 className="cursor-pointer outline-none"
                 style={{ opacity: lit ? 1 : 0.2, transition: "opacity 0.25s" }}
-                onMouseEnter={() => setActiveId(node.id)}
-                onMouseLeave={() => setActiveId(null)}
-                onFocus={() => setActiveId(node.id)}
-                onBlur={() => setActiveId(null)}
+                onMouseEnter={() => setHoverId(node.id)}
+                onMouseLeave={() => setHoverId(null)}
+                onFocus={() => setHoverId(node.id)}
+                onBlur={() => setHoverId(null)}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setActiveId(node.id === activeId ? null : node.id);
+                  togglePin(node.id);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    togglePin(node.id);
+                  }
                 }}
               >
                 {node.id === activeId && !node.me && (
-                  <circle r={r + 6} fill="none" stroke="var(--accent)" strokeWidth={1} />
+                  <circle
+                    r={r + 6}
+                    fill="none"
+                    stroke="var(--accent)"
+                    strokeWidth={node.id === pinnedId ? 2 : 1}
+                  />
                 )}
                 <circle
                   r={r}
@@ -146,21 +167,37 @@ export default function CoauthorNetwork({
       <div className="min-h-[8.5rem] border-t border-line p-4 md:px-6">
         {active && !active.me ? (
           <>
-            <p className="font-medium">{active.name}</p>
+            <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <p className="font-medium">{active.name}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
+                {active.id === pinnedId ? "Pinned · click again to release" : "Click to pin"}
+              </p>
+            </div>
             <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.15em] text-accent">
               {active.papers.length} {active.papers.length === 1 ? "paper" : "papers"} together
             </p>
             <ul className="space-y-1">
-              {active.papers.map((title) => (
-                <li key={title} className="line-clamp-1 text-xs text-muted">
-                  {title}
+              {active.papers.map((paper) => (
+                <li key={paper.title} className="line-clamp-1 text-xs text-muted">
+                  {paper.url ? (
+                    <a
+                      href={paper.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-accent"
+                    >
+                      {paper.title} ↗
+                    </a>
+                  ) : (
+                    paper.title
+                  )}
                 </li>
               ))}
             </ul>
           </>
         ) : (
           <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-            {nodes.length - 1} collaborators · Hover or tap a name to see shared papers
+            {nodes.length - 1} collaborators · Hover a name to preview shared papers, click to pin
           </p>
         )}
       </div>

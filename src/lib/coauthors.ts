@@ -10,10 +10,12 @@ import {
 } from "d3-force";
 import { isMe, type Publication } from "./publications";
 
+export type SharedPaper = { title: string; url: string | null };
+
 export type NetworkNode = {
   id: string;
   name: string;
-  papers: string[];
+  papers: SharedPaper[];
   me: boolean;
   x: number;
   y: number;
@@ -47,7 +49,7 @@ export function buildCoauthorNetwork(pubs: Publication[], width: number, height:
       spellings.set(id, counts);
       if (!nodes.has(id)) nodes.set(id, { id, name, papers: [], me: isMe(name) });
     }
-    for (const id of ids) nodes.get(id)!.papers.push(pub.title);
+    for (const id of ids) nodes.get(id)!.papers.push({ title: pub.title, url: pub.url ?? null });
 
     for (let i = 0; i < ids.length; i++) {
       for (let j = i + 1; j < ids.length; j++) {
