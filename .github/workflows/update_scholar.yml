@@ -31,9 +31,9 @@ jobs:
           pip install -r scripts/requirements.txt
 
       - name: Run scholar script
-        timeout-minutes: 20
+        timeout-minutes: 10  # Backstop; the script gives up after 5 minutes
         run: |
-          python scripts/fetch_scholar.py
+          python -u scripts/fetch_scholar.py
 
       - name: Commit and push if changed
         run: |

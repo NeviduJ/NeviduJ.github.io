@@ -2,9 +2,22 @@ import json
 import os
 import time
 import random
+import signal
 import arrow
 from scholarly import scholarly, ProxyGenerator
 import scholarly.publication_parser as publication_parser
+
+# Google Scholar often throttles CI runners, and scholarly then retries silently
+# for a long time. Give up after this many seconds and keep the existing data.
+FETCH_TIMEOUT_SECONDS = 5 * 60
+
+# Subclass BaseException so scholarly's internal `except Exception` retry
+# handlers can't swallow it
+class FetchTimeout(BaseException):
+    pass
+
+def _on_fetch_timeout(signum, frame):
+    raise FetchTimeout(f"Timed out after {FETCH_TIMEOUT_SECONDS} seconds (likely blocked by Google Scholar)")
 
 # scholarly parses the full "Publication date" (e.g. 2026/3/15) but only keeps
 # the year. Record the raw value so publications can be ordered by month too.
@@ -138,8 +151,11 @@ def main():
     # Setup proxy
     setup_proxy()
     
+    signal.signal(signal.SIGALRM, _on_fetch_timeout)
+    signal.alarm(FETCH_TIMEOUT_SECONDS)
     try:
         pubs = fetch_publications_with_retry(AUTHOR_ID)
+        signal.alarm(0)
         
         if pubs:
             with open(output_file, 'w') as f:
@@ -151,7 +167,8 @@ def main():
                 print("Keeping existing data")
             exit(1)
             
-    except Exception as e:
+    except (Exception, FetchTimeout) as e:
+        signal.alarm(0)
         print(f"✗ Error fetching publications: {e}")
         
         # Fallback: keep existing data if available
