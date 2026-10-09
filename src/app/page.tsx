@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Github, Linkedin, Mail, FileText, BookOpen, Star, GitFork, ExternalLink } from "lucide-react";
+import { Github, Linkedin, Mail, BookOpen, Star, GitFork, ExternalLink } from "lucide-react";
 import publications from "../../data/publications.json";
 import { getTopRepos } from "@/lib/github";
+import Publications from "@/components/Publications";
 import * as motion from "framer-motion/client";
 import { Suspense } from "react";
 
@@ -123,69 +124,7 @@ export default async function Home() {
 
       {/* Publications Section - Now Prominent */}
       <section className="max-w-3xl mx-auto px-6 py-12 border-t border-neutral-100 dark:border-neutral-900">
-        <h2 className="text-2xl font-semibold mb-8 flex items-center gap-2">
-          Publications
-          <span className="text-sm font-normal text-neutral-500 bg-neutral-100 dark:bg-neutral-900 px-2 py-0.5 rounded-full">
-            {publications.length}
-          </span>
-        </h2>
-        <div className="space-y-10">
-          {publications.map((pub, index) => (
-            <motion.article
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="group border-l-2 border-neutral-200 dark:border-neutral-800 pl-6 hover:border-blue-500 dark:hover:border-blue-400 transition-colors"
-            >
-              <div className="flex justify-between items-start gap-4">
-                <div className="space-y-3 flex-1">
-                  <h3 className="font-semibold text-xl group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight">
-                    {pub.url ? (
-                      <a href={pub.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                        {pub.title}
-                      </a>
-                    ) : (
-                      pub.title
-                    )}
-                  </h3>
-                  <div className="text-sm space-y-1">
-                    {pub.author && typeof pub.author === 'string' && (
-                      <div className="text-neutral-700 dark:text-neutral-300">
-                        {pub.author.split(' and ').map((author: string, i: number, arr: string[]) => (
-                          <span key={i}>
-                            {author.includes("Jayatilleke") || author.includes("Nevidu") ? (
-                              <span className="font-semibold text-neutral-900 dark:text-neutral-100">{author}</span>
-                            ) : (
-                              author
-                            )}
-                            {i < arr.length - 1 && (
-                              i === arr.length - 2 ? " and " : ", "
-                            )}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <div className="text-neutral-500 dark:text-neutral-400">
-                      <span className="font-medium">{pub.year}</span>
-                      {pub.venue && pub.venue !== "Unknown Venue" && (
-                        <span className="italic"> • {pub.venue}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                {pub.citation_count > 0 && (
-                  <div className="shrink-0 flex flex-col items-center gap-1 bg-neutral-100 dark:bg-neutral-900 px-3 py-2 rounded-lg">
-                    <FileText className="w-4 h-4 text-neutral-400" />
-                    <span className="text-sm font-semibold">{pub.citation_count}</span>
-                    <span className="text-xs text-neutral-500">cites</span>
-                  </div>
-                )}
-              </div>
-            </motion.article>
-          ))}
-        </div>
+        <Publications publications={publications} />
       </section>
 
       {/* Projects Section */}
