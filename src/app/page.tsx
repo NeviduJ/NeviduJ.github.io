@@ -272,12 +272,7 @@ export default async function Home() {
         {/* Collaborators */}
         <section id="collaborators" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24 md:py-32">
           <SectionHeading index="03" title="Collaborators" count={network.nodes.length - 1} />
-          <CoauthorNetwork
-            nodes={network.nodes}
-            links={network.links}
-            width={NETWORK_WIDTH}
-            height={NETWORK_HEIGHT}
-          />
+          <CoauthorNetwork nodes={network.nodes} links={network.links} />
         </section>
 
         {/* Projects */}

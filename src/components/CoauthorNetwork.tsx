@@ -3,16 +3,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { nodeRadius, type NetworkLink, type NetworkNode } from "@/lib/coauthors";
 
+// Labels are 10.5px uppercase mono with 0.08em tracking: about 7.2 units per character
+const LABEL_CHAR_WIDTH = 7.2;
+const LABEL_OFFSET = 16;
+
 export default function CoauthorNetwork({
   nodes,
   links,
-  width,
-  height,
 }: {
   nodes: NetworkNode[];
   links: NetworkLink[];
-  width: number;
-  height: number;
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -33,17 +33,17 @@ export default function CoauthorNetwork({
     return map;
   }, [links]);
 
-  // Crop to the graph itself (plus room for labels) so it fills the frame
+  // Crop to the graph itself so it fills the frame, leaving room for every name label
+  // (labels are centred under their node, so a long name needs half its width either side)
   const viewBox = useMemo(() => {
-    const pad = 60;
-    const xs = nodes.map((n) => n.x);
-    const ys = nodes.map((n) => n.y);
-    const minX = Math.max(0, Math.min(...xs) - pad);
-    const minY = Math.max(0, Math.min(...ys) - pad);
-    const maxX = Math.min(width, Math.max(...xs) + pad);
-    const maxY = Math.min(height, Math.max(...ys) + pad);
+    const pad = 30;
+    const labelHalfWidth = (n: NetworkNode) => (n.me ? 0 : n.name.length * LABEL_CHAR_WIDTH) / 2;
+    const minX = Math.min(...nodes.map((n) => n.x - Math.max(nodeRadius(n), labelHalfWidth(n)))) - pad;
+    const maxX = Math.max(...nodes.map((n) => n.x + Math.max(nodeRadius(n), labelHalfWidth(n)))) + pad;
+    const minY = Math.min(...nodes.map((n) => n.y - nodeRadius(n))) - pad;
+    const maxY = Math.max(...nodes.map((n) => n.y + nodeRadius(n) + LABEL_OFFSET + 6)) + pad;
     return `${minX} ${minY} ${maxX - minX} ${maxY - minY}`;
-  }, [nodes, width, height]);
+  }, [nodes]);
 
   const active = activeId ? byId.get(activeId) : undefined;
   const isLit = (id: string) => !activeId || id === activeId || neighbours.get(activeId)?.has(id);
@@ -123,7 +123,7 @@ export default function CoauthorNetwork({
                 )}
                 {showLabel && !node.me && (
                   <text
-                    y={r + 16}
+                    y={r + LABEL_OFFSET}
                     textAnchor="middle"
                     className="font-mono uppercase"
                     fontSize={10.5}
