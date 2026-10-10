@@ -12,6 +12,7 @@ import Tokenized from "@/components/Tokenized";
 import Spotlight from "@/components/Spotlight";
 import CoauthorNetwork from "@/components/CoauthorNetwork";
 import { buildCoauthorNetwork } from "@/lib/coauthors";
+import { SITE_URL } from "@/lib/site";
 import * as motion from "framer-motion/client";
 import { Suspense } from "react";
 
@@ -55,6 +56,45 @@ const LANGUAGE_COLORS: Record<string, string> = {
   JavaScript: "#F1E05A",
   HTML: "#E34C26",
 };
+
+// Structured data (schema.org) so search engines can link this site to Nevidu's
+// profiles, affiliations and papers. Rebuilt with every Scholar sync.
+function structuredData() {
+  const person = {
+    "@type": "Person",
+    "@id": `${SITE_URL}/#person`,
+    name: "Nevidu Jayatilleke",
+    url: `${SITE_URL}/`,
+    image: `${SITE_URL}/profile.jpg`,
+    email: "mailto:nevidu.25@cse.mrt.ac.lk",
+    jobTitle: "Postgraduate Researcher",
+    nationality: { "@type": "Country", name: "Sri Lanka" },
+    affiliation: [
+      { "@type": "CollegeOrUniversity", name: "University of Moratuwa" },
+      { "@type": "CollegeOrUniversity", name: "Informatics Institute of Technology" },
+    ],
+    alumniOf: [{ "@type": "CollegeOrUniversity", name: "Robert Gordon University" }],
+    knowsAbout: ["Natural Language Processing", ...TOPICS],
+    award: ["Best Paper Award (NLP Track), MERCon 2026", "IIT Senate Award for Research Excellence 2025"],
+    sameAs: SOCIALS.filter((s) => s.href.startsWith("https://")).map((s) => s.href),
+  };
+  const articles = publications.map((pub) => ({
+    "@type": "ScholarlyArticle",
+    headline: pub.title,
+    author: pub.author.split(" and ").map((name) => ({ "@type": "Person", name: name.trim() })),
+    datePublished: pub.pub_date ?? String(pub.year),
+    ...(pub.url ? { url: pub.url } : {}),
+    ...(pub.venue ? { isPartOf: { "@type": "PublicationIssue", name: pub.venue } } : {}),
+  }));
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: `${SITE_URL}/`, name: "Nevidu Jayatilleke", author: { "@id": `${SITE_URL}/#person` } },
+      { "@type": "ProfilePage", url: `${SITE_URL}/`, mainEntity: person },
+      ...articles,
+    ],
+  };
+}
 
 const NETWORK_WIDTH = 1100;
 const NETWORK_HEIGHT = 620;
@@ -117,6 +157,11 @@ export default async function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        // Escape "<" so paper titles can never close the script tag
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData()).replace(/</g, "\\u003c") }}
+      />
       <Nav />
       <main className="overflow-x-clip">
         {/* Hero */}
@@ -197,6 +242,8 @@ export default async function Home() {
                   <img
                     src={profileImageSrc}
                     alt="Nevidu Jayatilleke"
+                    width={576}
+                    height={553}
                     className="aspect-[4/5] w-full object-cover grayscale contrast-110 transition duration-500 group-hover:grayscale-0"
                   />
                 </div>

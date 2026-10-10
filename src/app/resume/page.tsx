@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Download } from "lucide-react";
 import { cvPdfHref, profile, education, experience, projects, skills, achievements, references } from "@/data/resume";
@@ -6,8 +7,23 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Publications from "@/components/Publications";
 import SectionHeading from "@/components/SectionHeading";
+import { OG_IMAGE } from "@/lib/site";
 import Tokenized from "@/components/Tokenized";
 import * as motion from "framer-motion/client";
+
+export const metadata: Metadata = {
+    title: "CV",
+    description:
+        "Curriculum vitae of Nevidu Jayatilleke: education, research and teaching experience, publications, projects and awards in natural language processing.",
+    alternates: { canonical: "/resume" },
+    openGraph: {
+        type: "profile",
+        url: "/resume",
+        siteName: "Nevidu Jayatilleke",
+        title: "CV | Nevidu Jayatilleke",
+        images: [OG_IMAGE],
+    },
+};
 
 export default function Resume() {
     return (
