@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import SectionHeading from "./SectionHeading";
@@ -24,12 +24,19 @@ const SORT_OPTIONS: { value: SortMode; label: string }[] = [
 export default function Publications({
   publications,
   index = "02",
+  initialCount,
 }: {
   publications: Publication[];
   index?: string;
+  /** Show only this many until "Show all" is clicked; omit to always show everything */
+  initialCount?: number;
 }) {
   const [sortMode, setSortMode] = useState<SortMode>("default");
+  const [expanded, setExpanded] = useState(false);
+  const listRef = useRef<HTMLOListElement>(null);
   const sorted = useMemo(() => sortPublications(publications, sortMode), [publications, sortMode]);
+  const collapsible = initialCount !== undefined && sorted.length > initialCount;
+  const visible = collapsible && !expanded ? sorted.slice(0, initialCount) : sorted;
   const maxCitations = Math.max(1, ...publications.map((p) => p.citation_count));
 
   return (
@@ -56,8 +63,8 @@ export default function Publications({
         </div>
       </SectionHeading>
 
-      <ol>
-        {sorted.map((pub, index) => (
+      <ol ref={listRef} className="scroll-mt-24">
+        {visible.map((pub, index) => (
           <motion.li
             key={pub.title}
             layout
@@ -124,6 +131,22 @@ export default function Publications({
           </motion.li>
         ))}
       </ol>
+
+      {collapsible && (
+        <button
+          type="button"
+          aria-expanded={expanded}
+          onClick={() => {
+            // When collapsing, jump back to the list so the reader isn't left far below it
+            if (expanded) listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            setExpanded(!expanded);
+          }}
+          className="group mt-10 flex w-full items-center justify-center gap-3 border border-line py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted transition-colors hover:border-ink hover:text-ink"
+        >
+          {expanded ? "Show less" : `Show all ${sorted.length} publications`}
+          <span className={`transition-transform ${expanded ? "rotate-180" : "group-hover:translate-y-0.5"}`}>↓</span>
+        </button>
+      )}
     </>
   );
 }

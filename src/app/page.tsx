@@ -306,7 +306,7 @@ export default async function Home() {
 
         {/* Publications */}
         <section id="publications" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24 md:py-32">
-          <Publications publications={publications} />
+          <Publications publications={publications} initialCount={10} />
           <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
             Synced daily from Google Scholar
           </p>
