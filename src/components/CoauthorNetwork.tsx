@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { nodeRadius, type NetworkLink, type NetworkNode } from "@/lib/coauthors";
-
-// Labels are 10.5px uppercase mono with 0.08em tracking: about 7.2 units per character
-const LABEL_CHAR_WIDTH = 7.2;
-const LABEL_OFFSET = 16;
+import {
+  hasPermanentLabel,
+  LABEL_CHAR_WIDTH,
+  LABEL_OFFSET,
+  nodeRadius,
+  type NetworkLink,
+  type NetworkNode,
+} from "@/lib/coauthors";
 
 export default function CoauthorNetwork({
   nodes,
@@ -91,7 +94,7 @@ export default function CoauthorNetwork({
           {nodes.map((node) => {
             const r = nodeRadius(node);
             const lit = isLit(node.id);
-            const showLabel = node.me || node.papers.length > 1 || node.id === activeId;
+            const showLabel = hasPermanentLabel(node) || node.id === activeId;
             return (
               <g
                 key={node.id}
