@@ -40,6 +40,16 @@
     "scholar_id": "2pDm_0UAAAAJ:qxL8FJ1GzNcC"
   },
   {
+    "title": "PlurVA-LLM-2026 Shared Task Track-1: Pluralistic Value Alignment in LLMs via Multilingual Fine-Tuning and Threshold Calibration",
+    "year": 2026,
+    "pub_date": "2026-09-26",
+    "citation_count": 1,
+    "venue": "arXiv preprint arXiv:2609.32382, 2026",
+    "author": "Vihindi Kotalawala and Nevidu Jayatilleke",
+    "url": "https://arxiv.org/abs/2609.32382",
+    "scholar_id": "2pDm_0UAAAAJ:blknAaTinKkC"
+  },
+  {
     "title": "SiPaKosa: A Comprehensive Corpus of Canonical and Classical Buddhist Texts in Sinhala and Pali",
     "year": 2026,
     "pub_date": "2026-05-16",
@@ -98,16 +108,6 @@
     "author": "Minduli Lasandi and Nevidu Jayatilleke",
     "url": "https://arxiv.org/abs/2609.32397",
     "scholar_id": "2pDm_0UAAAAJ:hMod-77fHWUC"
-  },
-  {
-    "title": "PlurVA-LLM-2026 Shared Task Track-1: Pluralistic Value Alignment in LLMs via Multilingual Fine-Tuning and Threshold Calibration",
-    "year": 2026,
-    "pub_date": "2026-09-26",
-    "citation_count": 0,
-    "venue": "arXiv preprint arXiv:2609.32382, 2026",
-    "author": "Vihindi Kotalawala and Nevidu Jayatilleke",
-    "url": "https://arxiv.org/abs/2609.32382",
-    "scholar_id": "2pDm_0UAAAAJ:blknAaTinKkC"
   },
   {
     "title": "Dynamics of meaning: Towards the Evaluation of Diachronic Semantic Change in Sinhala",
