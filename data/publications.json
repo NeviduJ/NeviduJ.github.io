@@ -40,6 +40,16 @@
     "scholar_id": "2pDm_0UAAAAJ:qxL8FJ1GzNcC"
   },
   {
+    "title": "SINHALEGAL: A Benchmark Corpus for Information Extraction and Analysis in Sinhala Legislative Texts",
+    "year": 2026,
+    "pub_date": "2026-03",
+    "citation_count": 2,
+    "venue": "Proceedings of the Second Workshop on Language Models for Low-Resource \u2026, 2026",
+    "author": "Minduli Lasandi and Nevidu Jayatilleke",
+    "url": "https://aclanthology.org/2026.loreslm-1.11/",
+    "scholar_id": "2pDm_0UAAAAJ:YOwf2qJgpHMC"
+  },
+  {
     "title": "PlurVA-LLM-2026 Shared Task Track-1: Pluralistic Value Alignment in LLMs via Multilingual Fine-Tuning and Threshold Calibration",
     "year": 2026,
     "pub_date": "2026-09-26",
@@ -78,16 +88,6 @@
     "author": "Johan Nevin Sofalas and Dilushri Pavithra and Nevidu Jayatilleke and Ruvan Weerasinghe",
     "url": "https://aclanthology.org/2026.mwe-1.2/",
     "scholar_id": "2pDm_0UAAAAJ:QIV2ME_5wuYC"
-  },
-  {
-    "title": "SINHALEGAL: A Benchmark Corpus for Information Extraction and Analysis in Sinhala Legislative Texts",
-    "year": 2026,
-    "pub_date": "2026-03",
-    "citation_count": 1,
-    "venue": "Proceedings of the Second Workshop on Language Models for Low-Resource \u2026, 2026",
-    "author": "Minduli Lasandi and Nevidu Jayatilleke",
-    "url": "https://aclanthology.org/2026.loreslm-1.11/",
-    "scholar_id": "2pDm_0UAAAAJ:YOwf2qJgpHMC"
   },
   {
     "title": "Fact over Fiction: Detection of Pathological Hallucinations in Sinhala-to-English Neural Machine Translation",
