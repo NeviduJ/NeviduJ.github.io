@@ -54,7 +54,7 @@
     "year": 2026,
     "pub_date": "2026-09-26",
     "citation_count": 1,
-    "venue": "arXiv preprint arXiv:2609.32382, 2026",
+    "venue": "Proceedings of the First Workshop on Pluralistic Value Alignment of LLMs \u2026, 2026",
     "author": "Vihindi Kotalawala and Nevidu Jayatilleke",
     "url": "https://arxiv.org/abs/2609.32382",
     "scholar_id": "2pDm_0UAAAAJ:blknAaTinKkC"
@@ -90,6 +90,16 @@
     "scholar_id": "2pDm_0UAAAAJ:QIV2ME_5wuYC"
   },
   {
+    "title": "Dynamics of Meaning: Towards the Evaluation of Diachronic Semantic Change in Sinhala",
+    "year": 2026,
+    "pub_date": "2026-09-08",
+    "citation_count": 0,
+    "venue": "Proceedings of the 15th International Joint Conference on Natural Language \u2026, 2026",
+    "author": "Nevidu Jayatilleke and Nisansa de Silva",
+    "url": "https://arxiv.org/abs/2609.08609",
+    "scholar_id": "2pDm_0UAAAAJ:iH-uZ7U-co4C"
+  },
+  {
     "title": "Fact over Fiction: Detection of Pathological Hallucinations in Sinhala-to-English Neural Machine Translation",
     "year": 2026,
     "pub_date": "2026-10-08",
@@ -108,16 +118,6 @@
     "author": "Minduli Lasandi and Nevidu Jayatilleke",
     "url": "https://arxiv.org/abs/2609.32397",
     "scholar_id": "2pDm_0UAAAAJ:hMod-77fHWUC"
-  },
-  {
-    "title": "Dynamics of Meaning: Towards the Evaluation of Diachronic Semantic Change in Sinhala",
-    "year": 2026,
-    "pub_date": "2026-09-08",
-    "citation_count": 0,
-    "venue": "arXiv preprint arXiv:2609.08609, 2026",
-    "author": "Nevidu Jayatilleke and Nisansa de Silva",
-    "url": "https://arxiv.org/abs/2609.08609",
-    "scholar_id": "2pDm_0UAAAAJ:iH-uZ7U-co4C"
   },
   {
     "title": "Impact of Cyclone Ditwah on the Colombo Stock Exchange: An Event Study on Market Reactions to Natural Disasters",
