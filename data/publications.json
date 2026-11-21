@@ -52,11 +52,11 @@
   {
     "title": "PlurVA-LLM-2026 Shared Task Track-1: Pluralistic Value Alignment in LLMs via Multilingual Fine-Tuning and Threshold Calibration",
     "year": 2026,
-    "pub_date": "2026-09-26",
+    "pub_date": "2026-11",
     "citation_count": 1,
     "venue": "Proceedings of the First Workshop on Pluralistic Value Alignment of LLMs \u2026, 2026",
     "author": "Vihindi Kotalawala and Nevidu Jayatilleke",
-    "url": "https://arxiv.org/abs/2609.32382",
+    "url": "https://aclanthology.org/2026.plurvallm-1.10/",
     "scholar_id": "2pDm_0UAAAAJ:blknAaTinKkC"
   },
   {
@@ -66,7 +66,7 @@
     "citation_count": 1,
     "venue": "Proceedings of the Second workshop on Challenges in Processing South Asian \u2026, 2026",
     "author": "Ranidu Gurursinghe and Nevidu Jayatilleke",
-    "url": "https://aclanthology.org/2026.chipsal-1.pdf#page=82",
+    "url": "https://aclanthology.org/2026.chipsal-1.8/",
     "scholar_id": "2pDm_0UAAAAJ:e5wmG9Sq2KIC"
   },
   {
@@ -92,11 +92,11 @@
   {
     "title": "Dynamics of Meaning: Towards the Evaluation of Diachronic Semantic Change in Sinhala",
     "year": 2026,
-    "pub_date": "2026-09-08",
+    "pub_date": "2026-11",
     "citation_count": 0,
     "venue": "Proceedings of the 15th International Joint Conference on Natural Language \u2026, 2026",
-    "author": "Nevidu Jayatilleke and Nisansa de Silva",
-    "url": "https://arxiv.org/abs/2609.08609",
+    "author": "Nevidu Jayatilleke and Nisansa De Silva",
+    "url": "https://aclanthology.org/2026.aacl-long.4/",
     "scholar_id": "2pDm_0UAAAAJ:iH-uZ7U-co4C"
   },
   {
