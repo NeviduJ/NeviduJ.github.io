@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 0 * * *'  # Daily at midnight
   workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: 'Re-fetch authors, dates and links for every paper'
+        type: boolean
+        default: false
 
 jobs:
   update-scholar:
@@ -34,7 +39,12 @@ jobs:
         timeout-minutes: 10  # Backstop; the script gives up after 5 minutes
         env:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        # Full detail refresh on manual request, and every Sunday to catch link
+        # changes that don't alter the listing (~16 extra SerpApi calls per week)
         run: |
+          if [ "${{ inputs.force_refresh }}" = "true" ] || [ "$(date -u +%u)" = "7" ]; then
+            export FORCE_REFRESH=1
+          fi
           python -u scripts/fetch_scholar.py
 
       - name: Commit and push if changed

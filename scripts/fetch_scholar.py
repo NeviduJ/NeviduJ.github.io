@@ -55,12 +55,34 @@ def _serpapi_get(api_key, **params):
         raise RuntimeError(f"SerpApi error ({resp.status_code}): {data.get('error', resp.text[:200])}")
     return data
 
-def fetch_publications_serpapi(author_id, api_key, existing_data):
+def _details_stale(cached, article):
+    """True when the cached authors/date/link can no longer be trusted.
+
+    When Google Scholar merges versions of a paper (e.g. an arXiv preprint into
+    its conference version) the listing's title, venue or year changes while the
+    citation_id usually stays the same. The per-paper details (notably the link)
+    change with it, so any difference from the cached listing fields means the
+    details must be fetched again.
+    """
+    year = str(article.get('year') or '')
+    return (
+        not cached
+        or not cached.get('author')
+        or not cached.get('pub_date')
+        or cached.get('title', '').strip() != article.get('title', '').strip()
+        or (cached.get('venue') or '') != (article.get('publication') or '')
+        # Only compare when Scholar lists a year; a blank one isn't a change
+        or (year.isdigit() and str(cached.get('year')) != year)
+    )
+
+def fetch_publications_serpapi(author_id, api_key, existing_data, force_refresh=False):
     """Fetch publications through SerpApi, which isn't blocked on CI runners.
 
     The article list (titles, venues, citation counts) costs one request. Full
     authors, publication date and link need one request per paper, so they are
-    reused from existing data and only fetched for papers not seen before.
+    reused from existing data and only re-fetched for papers that are new, whose
+    listing changed (see _details_stale), or for every paper when force_refresh
+    is set (catches link changes Scholar makes without touching the listing).
     """
     cached_by_id = {p['scholar_id']: p for p in existing_data if p.get('scholar_id')}
     cached_by_title = {p['title'].strip().lower(): p for p in existing_data}
@@ -82,10 +104,11 @@ def fetch_publications_serpapi(author_id, api_key, existing_data):
         title = article.get('title', 'Untitled')
         cached = cached_by_id.get(scholar_id) or cached_by_title.get(title.strip().lower())
 
-        if cached and cached.get('author') and cached.get('pub_date'):
+        if not force_refresh and not _details_stale(cached, article):
             author_str, pub_date, url = cached['author'], cached['pub_date'], cached.get('url')
         else:
-            print(f"Fetching details for new publication: {title}")
+            reason = 'forced refresh' if force_refresh else ('changed on Scholar' if cached else 'new')
+            print(f"Fetching details ({reason}): {title}")
             citation = _serpapi_get(api_key, view_op='view_citation', citation_id=scholar_id).get('citation', {})
             authors = [a.strip() for a in citation.get('authors', article.get('authors', '')).split(',') if a.strip()]
             author_str = ' and '.join(authors) or 'Unknown Author'
@@ -213,9 +236,11 @@ def main():
     
     api_key = os.environ.get('SERPAPI_KEY')
     if api_key:
-        print("Using SerpApi")
+        # Set by the workflow weekly and on manual runs with force_refresh ticked
+        force_refresh = os.environ.get('FORCE_REFRESH', '').lower() in ('1', 'true', 'yes')
+        print(f"Using SerpApi (force refresh: {force_refresh})")
         try:
-            pubs = fetch_publications_serpapi(AUTHOR_ID, api_key, existing_data or [])
+            pubs = fetch_publications_serpapi(AUTHOR_ID, api_key, existing_data or [], force_refresh)
         except Exception as e:
             # Fail loudly: this means a bad key, exhausted quota or an API change
             print(f"✗ SerpApi fetch failed: {e}")
