@@ -32,8 +32,13 @@ export const LABEL_CHAR_WIDTH = 7.2;
 export const LABEL_OFFSET = 16;
 const LABEL_HEIGHT = 12;
 
-// Labels always shown (not just on hover); the component uses the same rule
-export const hasPermanentLabel = (node: Pick<NetworkNode, "me" | "papers">) => !node.me && node.papers.length > 1;
+// Supervisors, as lowercased Scholar names (node ids are lowercased names, so spelling
+// variants like "De Silva" / "de Silva" collapse to one id). Only these get permanent labels.
+const SUPERVISOR_IDS = new Set(["ruvan weerasinghe", "nisansa de silva"]);
+
+// Labels always shown (not just on hover/click); the component uses the same rule.
+// Everyone else's name appears only when hovered or pinned.
+export const hasPermanentLabel = (node: Pick<NetworkNode, "id" | "me">) => !node.me && SUPERVISOR_IDS.has(node.id);
 
 type SimNode = SimulationNodeDatum & Omit<NetworkNode, "x" | "y">;
 
