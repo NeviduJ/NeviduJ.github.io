@@ -100,23 +100,33 @@
     "scholar_id": "2pDm_0UAAAAJ:QIV2ME_5wuYC"
   },
   {
+    "title": "Data-Driven Detection of Volatility Regimes and Sector-Level Asymmetry During Sovereign Default",
+    "year": 2026,
+    "pub_date": "2026-11-20",
+    "citation_count": 0,
+    "venue": "arXiv preprint arXiv:2611.26967, 2026",
+    "author": "MJS Ahamed and MR Hatheem and MAH Ahamed and UI Jayasekara and HY Ahamed and Madara Mendis and Nevidu Jayatilleke and Nisansa de Silva and Sandareka Wickramanayake",
+    "url": "https://arxiv.org/abs/2611.26967",
+    "scholar_id": "2pDm_0UAAAAJ:RGFaLdJalmkC"
+  },
+  {
     "title": "Fact over Fiction: Detection of Pathological Hallucinations in Sinhala-to-English Neural Machine Translation",
     "year": 2026,
-    "pub_date": "2026-10-08",
+    "pub_date": "2026-11",
     "citation_count": 0,
-    "venue": "arXiv preprint arXiv:2610.11389, 2026",
+    "venue": "Proceedings of the 38th Conference on Computational Linguistics and Speech \u2026, 2026",
     "author": "Navam Obeysekara and Nevidu Jayatilleke",
-    "url": "https://arxiv.org/abs/2610.11389",
+    "url": "https://aclanthology.org/2026.rocling-main.11/",
     "scholar_id": "2pDm_0UAAAAJ:YFjsv_pBGBYC"
   },
   {
-    "title": "SinBrief: A Hybrid Framework for Abstractive Text Summarisation of Sinhala Legal Documents",
+    "title": "SINBRIEF: A Hybrid Framework for Abstractive Text Summarisation of Sinhala Legal Documents",
     "year": 2026,
-    "pub_date": "2026-09-26",
+    "pub_date": "2026-11",
     "citation_count": 0,
-    "venue": "arXiv preprint arXiv:2609.32397, 2026",
+    "venue": "Proceedings of the 38th Conference on Computational Linguistics and Speech \u2026, 2026",
     "author": "Minduli Lasandi and Nevidu Jayatilleke",
-    "url": "https://arxiv.org/abs/2609.32397",
+    "url": "https://aclanthology.org/2026.rocling-main.25/",
     "scholar_id": "2pDm_0UAAAAJ:hMod-77fHWUC"
   },
   {
